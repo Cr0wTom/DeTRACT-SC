@@ -1,0 +1,22 @@
+{
+  "name": "block-ssl-smart-contract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cr0wTom/Block-SSL-Smart-Contract.git"
+  },
+  "author": "Cr0wTom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cr0wTom/Block-SSL-Smart-Contract/issues"
+  },
+  "homepage": "https://github.com/Cr0wTom/Block-SSL-Smart-Contract#readme",
+  "dependencies": {
+    "web3": "github:ethereum/web3.js"
+  }
+}
