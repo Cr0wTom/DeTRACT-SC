@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Block-SSL Smart Contract</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>SSL/TLS Certificate Registration</h1>
+
+        <h2 id="certificate"></h2>
+        <span id="certTrans"></span>
+        <hr>
+
+        <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+
+        <label for="creator" class="col-lg-2 control-label">Certificate Creator</label>
+        <input id="creator" type="text">
+
+        <label for="domain" class="col-lg-2 control-label">Certificate Domain</label>
+        <input id="domain" type="text">
+
+        <label for="uPortID" class="col-lg-2 control-label">uPort ID</label>
+        <input id="uPortID" type="text">
+
+        <label for="certificateHash" class="col-lg-2 control-label">Certificate Hash</label>
+        <input id="certificateHash" type="text">
+
+        <label for="serialNumber" class="col-lg-2 control-label">Serial Number</label>
+        <input id="serialNumber" type="text">
+
+        <label for="expiry" class="col-lg-2 control-label">Certificate Expiration Date</label>
+        <input id="expiry" type="text">
+
+        <label for="certDownloadLink" class="col-lg-2 control-label">Certificate Download Link</label>
+        <input id="certDownloadLink" type="text">
+
+        <p><button id="button">Create Certificate</button></p>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+           web3 = new Web3(web3.currentProvider);
+       } else {
+           web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+       }
+
+       web3.eth.defaultAccount = web3.eth.accounts[0];
+
+       var BlockSSLContract = web3.eth.contract([{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"certAdd","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"countCertificates","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_address","type":"address"},{"name":"_creator","type":"address"},{"name":"_domain","type":"string"},{"name":"_uPortID","type":"string"},{"name":"_certificateHash","type":"string"},{"name":"_serialNumber","type":"uint256"},{"name":"_expiry","type":"uint256"},{"name":"_certDownloadLink","type":"string"}],"name":"setCertificate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getCertificatesInfo","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"cert","type":"address"}],"name":"getCertificateInfo","outputs":[{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"creator","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"uPortID","type":"string"},{"indexed":false,"name":"certificateHash","type":"string"},{"indexed":false,"name":"serialNumber","type":"uint256"},{"indexed":false,"name":"expiry","type":"uint256"},{"indexed":false,"name":"certDownloadLink","type":"string"}],"name":"certificateInfoAdded","type":"event"}]);
+
+       var BlockSSL = BlockSSLContract.at('0xb6bf72a23f4f89076a7a195a89e50da25957a221');
+
+       var blockSSLEvent = BlockSSL.certificateInfoAdded({}, 'latest');
+
+       blockSSLEvent.watch(function(error, result) {
+           if (result) {
+               if (result.blockHash != $("#certTrans").html())
+                    $("#loader").hide();
+                    $("#certTrans").html('Block hash: ' + result.blockHash);
+                    $("#certificate").html(web3.toAscii(result.args.creator) + ' ' + web3.toAscii(result.args.domain) + ' (' + result.args.expiry + ' expiry date)');
+           }
+           else {
+              $("#loader").hide();
+              console.log(error);
+           }
+       });
+
+
+       $("#button").click(function() {
+            $("#loader").show();
+           BlockSSL.certificateInfoAdded(web3.eth.defaultAccount, $("#creator").val(), $("#domain").val(), $("#expiry").val(), (err, res) => {
+               if (err) {
+                   $("#loader").hide();
+               }
+           });
+       });
+
+    </script>
+
+</body>
+</html>
