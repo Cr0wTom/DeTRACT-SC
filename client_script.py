@@ -47,6 +47,13 @@ def clientscript():
     k = crypto.PKey()
     k.generate_key(crypto.TYPE_RSA, 4096)
 
+    priv = raw_input("Which is your private key? (in hexadecimal format)\n")  #Private Key of the owner
+    priv = BitcoinPrivateKey(priv)
+    pub = priv.get_verifying_key()
+    pub = pub.to_string()
+    keccak.update(pub)
+    address = keccak.hexdigest()[24:]
+    open("Address.txt", "w").write(address)
     # create a self-signed cert
     cert = crypto.X509()
     createCert(k, cert)
@@ -62,7 +69,10 @@ def clientscript():
     cert_hash.update(fr)
     data = cert_hash.hexdigest()
     print "\nYour Certificate hash is: ", data
-    #todo: upload to IPFS and print download link
+    subprocess.Popen(["geth"])
+    os.system("BZZKEY=" + address)
+    subprocess.Popen(["$GOPATH/bin/swarm --bzzaccount $BZZKEY"])
+    os.system("curl -H \"Content-Type: text/plain\" --data-binary \"some-data\" http://localhost:8500/bzz:/")
     #todo: find uPortID
     #todo: print Certificate expiration date
     #todo: print the expiration date and the days that left
@@ -102,7 +112,8 @@ def createCert(k, cert):
     future = now + diff
     print future.strftime("\nYour certificate expires on %m/%d/%Y") #print the expiration date
     print "\nAdding the GE and RV signatures to the issuer field..."
-    message_gen = raw_input("Please give your Ethereum address: \n")
+    message_gen = open("Address.txt", "rb").read()
+    message_gen = message_gen.strip('\n')
     m1 = hashlib.sha256()
     m1.update(message_gen)
     m1 = m1.hexdigest()
@@ -110,6 +121,38 @@ def createCert(k, cert):
     cert.set_pubkey(k)
     cert.sign(k, 'sha256')
     return cert
+
+def checkforSwarn():
+        name = "$GOPATH/bin/swarm"
+        try: #check if swarn exists
+            devnull = open(os.devnull)
+            subprocess.Popen([name], stdout=devnull, stderr=devnull).communicate()
+            print "\tSwarn exists.\n"
+        except OSError as e: #install swarn - os specific
+                if e.errno == os.errno.ENOENT:
+                    if sys.platform == "linux" or sys.platform == "linux2":
+                        print "Installing Swarn: \n"
+                        os.system("sudo apt install golang git")
+                        os.system("mkdir ~/go")
+                        os.system("export GOPATH=\"$HOME/go\"")
+                        os.system("echo \'export GOPATH=\"$HOME/go\"\' >> ~/.profile")
+                        os.system("mkdir -p $GOPATH/src/github.com/ethereum | cd $GOPATH/src/github.com/ethereum | git clone https://github.com/ethereum/go-ethereum | cd go-ethereum | git checkout master | go get github.com/ethereum/go-ethereum")
+                        os.system("go install -v ./cmd/geth")
+                        os.system("go install -v ./cmd/swarm")
+                        os.system("$GOPATH/bin/swarm version")
+                    elif sys.platform == "win32": #all Windows versions
+                        print "Swarn is not supported on Windows, please use Linux or Mac.\n"
+                    elif sys.platform == "darwin": #all OSX versions
+                        print "Installing Swarn: \n"
+                        os.system("brew install go git")
+                        os.system("mkdir ~/go")
+                        os.system("export GOPATH=\"$HOME/go\"")
+                        os.system("echo \'export GOPATH=\"$HOME/go\"\' >> ~/.profile")
+                        os.system("mkdir -p $GOPATH/src/github.com/ethereum | cd $GOPATH/src/github.com/ethereum | git clone https://github.com/ethereum/go-ethereum | cd go-ethereum | git checkout master | go get github.com/ethereum/go-ethereum")
+                        os.system("go install -v ./cmd/geth")
+                        os.system("go install -v ./cmd/swarm")
+                        os.system("$GOPATH/bin/swarm version")
+
 
 def main(argu):
     try:
@@ -123,7 +166,7 @@ def main(argu):
             clientscript()
     except IndexError:
         print art
-        print "Usage: \"client_script.py <option>\"
+        print "Usage: \"client_script.py <option>\""
         print "\nFor help use the --help or -h option."
         print "\n"
 
