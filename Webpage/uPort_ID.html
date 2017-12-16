@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Block-SSL Smart Contract</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="text/javascript" src="../node_modules/web3/dist/web3.js"></script>
+    <script type="text/javascript" src="./uport/uport-connect.js"></script>
+
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>SSL/TLS Certificate Registration</h1>
+          <h2>Connect uPort</h2>
+          <table>
+            <tbody>
+              <tr><td><span>uPort Id: </span><span id="uportId"></span></td></tr>
+              <tr><td><span>ETH Address: </span><span id="ethAddress"></span></td></tr>
+              <tr><td><span>ETH Balance: </span><span id="ethBalance"></span></td></tr>
+              <tr><td><span>Current Status: </span><span id="currentStatus"></span></td></tr>
+            </tbody>
+          </table>
+          <button class="btn btn-sm btn-primary" id="connectUportBtn" onclick="uportConnect()">Connect uPort</button>
+      </div>
+      <script>
+        // State and render functions
+
+        const $ = (selector) => document.querySelector(selector)
+        let globalState = {
+          uportId: "",
+          ethAddress: "",
+          ethBalance: "",
+          currentStatus: "",
+          statusInput: "",
+          txHashSentEth: "",
+          txHashSetStatus: "",
+          sendToAddr: "",
+          sendToVal: ""
+        }
+
+        const render = function () {
+          $('#uportId').innerHTML = globalState.uportId;
+          $('#ethAddress').innerHTML = globalState.ethAddress;
+          $('#ethBalance').innerHTML = globalState.ethBalance;
+          $('#txHashSentEth').innerHTML = globalState.txHashSentEth;
+          $('#txHashSetStatus').innerHTML = globalState.txHashSetStatus;
+          $('#sendTo').value = globalState.sendToAddr;
+          $('#amount').value = globalState.sendToVal;
+          $('#currentStatus').innerHTML = globalState.currentStatus;
+        }
+
+        const updateState = function () {
+          globalState.sendToAddr = $('#sendTo').value;
+          globalState.sendToVal = $('#amount').value;
+          globalState.statusInput = $('#statusInput').value;
+          console.log(globalState)
+        }
+
+        ////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////
+
+      </script>
+      <script type="text/javascript" src="uport_.js"></script>
+      </body>
+      </html>

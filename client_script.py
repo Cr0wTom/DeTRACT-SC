@@ -14,7 +14,7 @@ import traceback
 import subprocess
 from datetime import timedelta
 from Crypto.Cipher import AES
-from pybitcoin import BitcoinPrivateKey, make_op_return_tx, BlockchainInfoClient, send_to_address
+from pybitcoin import BitcoinPrivateKey
 from OpenSSL import crypto, SSL
 from ecdsa import SigningKey
 #For pybitcoin download and install from:
@@ -72,8 +72,7 @@ def clientscript():
     subprocess.Popen(["geth"])
     os.system("BZZKEY=" + address)
     subprocess.Popen(["$GOPATH/bin/swarm --bzzaccount $BZZKEY"])
-    os.system("curl -H \"Content-Type: text/plain\" --data-binary \"some-data\" http://localhost:8500/bzz:/")
-    #todo: find uPortID
+    os.system("curl -H \"Content-Type: text/plain\" --data-binary \"some-data\" http://localhost:8500/bzz:/") #todo: find swarm gateways
     #todo: print Certificate expiration date
     #todo: print the expiration date and the days that left
     print "Please open the BlockSSL Smart Contract and paste this info in the required fields."
@@ -159,14 +158,14 @@ def main(argu):
         if argu[1] == "--help" or argu[1] == "-h":
             #Option to helo with the usage of the script
             print art
-            print "Usage: \"client_script.py\""
+            print "Usage: \"client_script.py -c\""
             print "\n"
-        else:
+        elif argu[1] == "-c":
             print art
             clientscript()
     except IndexError:
         print art
-        print "Usage: \"client_script.py <option>\""
+        print "Usage: \"client_script.py -c\""
         print "\nFor help use the --help or -h option."
         print "\n"
 

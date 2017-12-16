@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="main.css">
 
     <script src="./node_modules/web3/dist/web3.min.js"></script>
+    <script type="text/javascript" src="./uport/uport-connect.js"></script>
 
 </head>
 <body>
@@ -17,22 +18,21 @@
         <h1>SSL/TLS Certificate Registration</h1>
 
         <h2 id="certificate"></h2>
-        <span id="certTrans"></span>
         <hr>
 
         <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
 
-        <label for="address" class="col-lg-2 control-label">Address</label>
-        <input id="address" type="text">
-        
+
         <label for="creator" class="col-lg-2 control-label">Certificate Creator</label>
         <input id="creator" type="text">
 
         <label for="domain" class="col-lg-2 control-label">Certificate Domain</label>
         <input id="domain" type="text">
 
-        <label for="uPortID" class="col-lg-2 control-label">uPort ID</label>
-        <input id="uPortID" type="text">
+        <label for="uportId" class="col-lg-2 control-label">uPort ID</label>
+        <input id="uportId" type="text">
+
+        <a href="./uPort_ID.html" target="_blank">Find your uPort ID</a>
 
         <label for="certificateHash" class="col-lg-2 control-label">Certificate Hash</label>
         <input id="certificateHash" type="text">
@@ -50,6 +50,8 @@
 
     </div>
 
+
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
     <script>
@@ -61,18 +63,191 @@
 
        web3.eth.defaultAccount = web3.eth.accounts[0];
 
-       var BlockSSLContract = web3.eth.contract([{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"certAdd","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"countCertificates","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_address","type":"address"},{"name":"_creator","type":"address"},{"name":"_domain","type":"string"},{"name":"_uPortID","type":"string"},{"name":"_certificateHash","type":"string"},{"name":"_serialNumber","type":"uint256"},{"name":"_expiry","type":"uint256"},{"name":"_certDownloadLink","type":"string"}],"name":"setCertificate","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getCertificatesInfo","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"cert","type":"address"}],"name":"getCertificateInfo","outputs":[{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"creator","type":"address"},{"indexed":false,"name":"domain","type":"string"},{"indexed":false,"name":"uPortID","type":"string"},{"indexed":false,"name":"certificateHash","type":"string"},{"indexed":false,"name":"serialNumber","type":"uint256"},{"indexed":false,"name":"expiry","type":"uint256"},{"indexed":false,"name":"certDownloadLink","type":"string"}],"name":"certificateInfoAdded","type":"event"}]);
+       var BlockSSLContract = web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "certAdd",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "countCertificates",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "cert",
+				"type": "address"
+			}
+		],
+		"name": "getCertificateInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getCertificatesInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"name": "_creator",
+				"type": "address"
+			},
+			{
+				"name": "_domain",
+				"type": "string"
+			},
+			{
+				"name": "_uportId",
+				"type": "string"
+			},
+			{
+				"name": "_certificateHash",
+				"type": "string"
+			},
+			{
+				"name": "_serialNumber",
+				"type": "uint256"
+			},
+			{
+				"name": "_expiry",
+				"type": "uint256"
+			},
+			{
+				"name": "_certDownloadLink",
+				"type": "string"
+			}
+		],
+		"name": "setCertificate",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "creator",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "domain",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "uportId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "certificateHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "serialNumber",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "expiry",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "certDownloadLink",
+				"type": "string"
+			}
+		],
+		"name": "certificateInfoAdded",
+		"type": "event"
+	}
+]);
 
-       var BlockSSL = BlockSSLContract.at('0x09afcd3e70a5b8352ca3c18bca41c01c4d967402');
+       var BlockSSL = BlockSSLContract.at('0xe476f4d8c15b791ba473b2b57381cb411b5d15f5');
 
-       var blockSSLEvent = BlockSSL.certificateInfoAdded({}, 'latest');
+       var blockSSLEvent = BlockSSL.certificateInfoAdded();
 
        blockSSLEvent.watch(function(error, result) {
            if (!error) {
-               if (result.blockHash != $("#certTrans").html())
-                    $("#loader").hide();
-                    $("#certTrans").html('Block hash: ' + result.blockHash);
-                    $("#certificate").html(web3.toAscii(result.args.creator) + ' ' + web3.toAscii(result.args.domain) + ' (' + result.args.expiry + ' expiry date)');
+              $("#loader").hide();
+              $("#certificate").html(result.args.creator + ' ' + result.args.domain + ' (' + result.args.expiry + ' expiry date)');
            }
            else {
               $("#loader").hide();
@@ -83,12 +258,7 @@
 
        $("#button").click(function() {
             $("#loader").show();
-           BlockSSL.setCertificate($("#creator").val(), $("#domain").val(), (err, res) => {
-               if (err) {
-                   $("#loader").hide();
-                   console.log('oh no');
-               }
-           });
+           BlockSSL.setCertificate(web3.eth.defaultAccount, $("#creator").val(), $("#domain").val(), $("#uportId").val(), $("#certificateHash").val(), $("#serialNumber").val(), $("#expiry").val(), $("#certDownloadLink").val())
        });
 
     </script>
