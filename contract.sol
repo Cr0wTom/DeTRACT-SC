@@ -20,7 +20,7 @@ contract BlockSSL {
     function setCertificate(address _address, address _creator, string _domain, string _uportId, string _certificateHash, uint _serialNumber, uint _expiry, string _certDownloadLink) public {
         var certificatesInfo = certificates[_address];
 
-        certificatesInfo.creator = _creator;
+        certificatesInfo.creator = msg.sender;
         certificatesInfo.domain = _domain;
         certificatesInfo.uportId = _uportId;
         certificatesInfo.certificateHash = _certificateHash;
@@ -28,7 +28,7 @@ contract BlockSSL {
         certificatesInfo.expiry = _expiry;
         certificatesInfo.certDownloadLink = _certDownloadLink;
 
-        certAdd.push(_address) -1;
+        certAdd.push(msg.sender) -1;
         certificateInfoAdded(_creator, _domain, _uportId, _certificateHash, _serialNumber, _expiry, _certDownloadLink);
     }
 

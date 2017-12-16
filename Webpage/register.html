@@ -22,9 +22,9 @@
 
         <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
 
+        <input id="address" type="hidden">
 
-        <label for="creator" class="col-lg-2 control-label">Certificate Creator</label>
-        <input id="creator" type="text">
+        <input id="creator" type="hidden">
 
         <label for="domain" class="col-lg-2 control-label">Certificate Domain</label>
         <input id="domain" type="text">
@@ -63,184 +63,9 @@
 
        web3.eth.defaultAccount = web3.eth.accounts[0];
 
-       var BlockSSLContract = web3.eth.contract([
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "certAdd",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "countCertificates",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "cert",
-				"type": "address"
-			}
-		],
-		"name": "getCertificateInfo",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getCertificatesInfo",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_address",
-				"type": "address"
-			},
-			{
-				"name": "_creator",
-				"type": "address"
-			},
-			{
-				"name": "_domain",
-				"type": "string"
-			},
-			{
-				"name": "_uportId",
-				"type": "string"
-			},
-			{
-				"name": "_certificateHash",
-				"type": "string"
-			},
-			{
-				"name": "_serialNumber",
-				"type": "uint256"
-			},
-			{
-				"name": "_expiry",
-				"type": "uint256"
-			},
-			{
-				"name": "_certDownloadLink",
-				"type": "string"
-			}
-		],
-		"name": "setCertificate",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "creator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "domain",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "uportId",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "certificateHash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "serialNumber",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "expiry",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "certDownloadLink",
-				"type": "string"
-			}
-		],
-		"name": "certificateInfoAdded",
-		"type": "event"
-	}
-]);
+       var BlockSSLContract = web3.eth.contract(); //abi
 
-       var BlockSSL = BlockSSLContract.at('0xe476f4d8c15b791ba473b2b57381cb411b5d15f5');
+       var BlockSSL = BlockSSLContract.at(''); //contract address
 
        var blockSSLEvent = BlockSSL.certificateInfoAdded();
 
@@ -258,7 +83,7 @@
 
        $("#button").click(function() {
             $("#loader").show();
-           BlockSSL.setCertificate(web3.eth.defaultAccount, $("#creator").val(), $("#domain").val(), $("#uportId").val(), $("#certificateHash").val(), $("#serialNumber").val(), $("#expiry").val(), $("#certDownloadLink").val())
+           BlockSSL.setCertificate($("#address").val(), $("#creator").val(), $("#domain").val(), $("#uportId").val(), $("#certificateHash").val(), $("#serialNumber").val(), $("#expiry").val(), $("#certDownloadLink").val(), {from: web3.eth.accounts[5], gas: 1000000})
        });
 
     </script>
